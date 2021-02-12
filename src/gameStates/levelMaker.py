@@ -34,11 +34,11 @@ def make_level():
     left_brick_x = (max_x - brick_x*2)/2
     left_brick_y = (max_y - brick_y*2)/3
     is_explode = random.randint(0,5)
-    if(is_explode==5):
-        is_explode = 1
-    else:
-        is_explode = 0
-
+    # if(is_explode==5):
+    #     is_explode = 1
+    # else:
+    #     is_explode = 0
+    is_explode = 1
     # this sectin adds exploding bricks to the mix (ggggg)
     if is_explode:
         # find which brick is the first  exploding brick

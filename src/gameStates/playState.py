@@ -26,6 +26,10 @@ class playState(BaseState):
     def update(self,input):
         self.ball.update(input)
         self.paddle.update(input)
+        for index1, brick_array in enumerate(self.bricks):
+            for index2,brick in enumerate(brick_array):
+                if brick:
+                    brick.update(self.bricks,index1, index2)
         if(input=='p'):
             return ["pauseState", {"ball" : self.ball , "paddle" : self.paddle , "gameover" : 0 , "lives" : self.lives, "bricks":self.bricks} ]
         #================================ this handles bal + paddle ================================================================================
