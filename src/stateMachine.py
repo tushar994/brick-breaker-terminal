@@ -42,14 +42,15 @@ class StateMachine:
     def render(self):
         display = np.full((max_x,max_y), " ")
         display = self.currentState.render(display)
-        self.printer_text+=1
+        
         for index, val in enumerate(display):
             # print(val)
-            print(self.printer_text, end = "")
-            print("::", end = "")
-            print(index, end = "")
+            # print(self.printer_text, end = "")
+            # print("::", end = "")
+            # print(index, end = "")
+            print("|", end = "")
             for valu in val:
-                if(valu=="r"):
+                if(valu=="x"):
                     print(f"{Fore.RED}#{Style.RESET_ALL}",end = "")
                 elif(valu=="y"):
                     print(f"{Fore.YELLOW}#{Style.RESET_ALL}",end = "")
@@ -57,8 +58,18 @@ class StateMachine:
                     print(f"{Fore.MAGENTA}#{Style.RESET_ALL}",end = "")
                 elif(valu=="b"):
                     print(f"{Fore.BLUE}#{Style.RESET_ALL}",end = "")
-                elif(valu=="c"):
+                elif(valu=="z"):
                     print(f"{Fore.CYAN}#{Style.RESET_ALL}",end = "")
+                elif(valu=="R"):
+                    print(f"{Fore.RED}@{Style.RESET_ALL}",end = "")
+                elif(valu=="Y"):
+                    print(f"{Fore.YELLOW}@{Style.RESET_ALL}",end = "")
+                elif(valu=="M"):
+                    print(f"{Fore.MAGENTA}@{Style.RESET_ALL}",end = "")
+                elif(valu=="B"):
+                    print(f"{Fore.BLUE}@{Style.RESET_ALL}",end = "")
+                elif(valu=="C"):
+                    print(f"{Fore.CYAN}@{Style.RESET_ALL}",end = "")
                 else:
                     print(valu,end = "")
                     

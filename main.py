@@ -3,7 +3,8 @@ from imports import *
 
 stateList = {
     "playState" : lambda : playState(),
-    "pauseState" : lambda : pauseState()
+    "pauseState" : lambda : pauseState(),
+    "gameoverState" : lambda: gameoverState(),
 }
 state_machine = StateMachine(stateList)
 state_machine.changeState('pauseState')

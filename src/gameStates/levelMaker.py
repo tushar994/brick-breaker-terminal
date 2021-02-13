@@ -11,7 +11,7 @@ a = datetime.now()
 # Converting a to string in the desired format (YYYYMMDD) using strftime
 # and then to int.
 a = int(a.strftime('%Y%m%d%s'))
-print(a)
+# print(a)
 random.seed(a)
 
 
@@ -22,7 +22,7 @@ def iterate(bricks, starting_x, starting_y, changes, first, one,left_brick_x,lef
     add_y += one*changes[first]['y']
     total = 0
     while(add_x>=0 and add_x<brick_x and add_y>=0 and add_y<brick_y):
-        bricks[add_x][add_y] = Brick({'x': int(add_x*2 + left_brick_x) , 'y': int(add_y*2 + left_brick_y) , 'level' : 1, 'explode' : 1})
+        bricks[add_x][add_y] = Brick({'x': int(add_x*brick_width + left_brick_x) , 'y': int(add_y*brick_width + left_brick_y) , 'level' : 1, 'explode' : 1})
         total+=1
         add_x += one*changes[first]['x']
         add_y += one*changes[first]['y']
@@ -31,8 +31,8 @@ def iterate(bricks, starting_x, starting_y, changes, first, one,left_brick_x,lef
 
 def make_level():
     bricks = np.full((brick_x,brick_y), None)
-    left_brick_x = (max_x - brick_x*2)/2
-    left_brick_y = (max_y - brick_y*2)/3
+    left_brick_x = (max_x - brick_x*brick_width)/2
+    left_brick_y = (max_y - brick_y*brick_width)/3
     is_explode = random.randint(0,5)
     # if(is_explode==5):
     #     is_explode = 1
@@ -48,7 +48,7 @@ def make_level():
         changes = [ {"x":1, "y":1}, {"x":1, "y":-1}, {"x":1, "y":0} ,{"x":0, "y":1} ]
         total = 0
         first = random.randint(0,3)
-        bricks[starting_x][starting_y] = Brick({'x': int(starting_x*2 + left_brick_x) , 'y':int(starting_y*2 + left_brick_y) , 'level' : 1, 'explode' : 1})
+        bricks[starting_x][starting_y] = Brick({'x': int(starting_x*brick_width + left_brick_x) , 'y':int(starting_y*brick_width + left_brick_y) , 'level' : 1, 'explode' : 1})
         total += 1
         # first iteration in first direction
         final = iterate(bricks, starting_x, starting_y, changes, first,1,left_brick_x,left_brick_y)
@@ -79,5 +79,5 @@ def make_level():
             if(not( bricks[i][j])):
                 yes = random.randint(0,4)
                 if(yes==4):
-                    bricks[i][j] = Brick({'x': int(i*2 + left_brick_x) , 'y':int(j*2 + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0})
+                    bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0})
     return bricks

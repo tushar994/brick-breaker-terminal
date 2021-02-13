@@ -10,4 +10,5 @@ from src.input.input import *
 
 from src.gameStates.playState import *
 from src.gameStates.pauseState import *
+from src.gameStates.gameoverState import *
 from src.stateMachine import *

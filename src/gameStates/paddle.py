@@ -3,11 +3,26 @@ from .dimensions.dimensions import *
 class Paddle:
     def __init__(self):
         self.x = max_x-1
-        self.length = 5
+        self.length = paddle_length
         self.y = max_y - self.length 
-        self.speed =2
+        self.speed = paddle_speed
+        self.powerup_time = 0
+        self.grab = 0
+        self.grab_time = 0
     
     def update(self, input):
+        # worrying about powerups
+        # grab powerup
+        self.grab_time-=1
+        if(self.grab_time<=0):
+            self.grab = 0
+            self.grab_time=0
+        # length powerup
+        self.powerup_time -=1
+        if self.powerup_time<=0:
+            self.length = paddle_length
+            self.powerup_time = 0
+        # movement
         if input=='a':
             self.y-=self.speed
         if input=='d':
@@ -30,3 +45,31 @@ class Paddle:
             self.length = parameters.length
         if(parameters.speed or parameters.speed==0):
             self.speed = parameters.speed
+        if(parameters.powerup_time or parameters.powerup_time==0):
+            self.powerup_time = parameters.powerup_time
+        if(parameters.grab or parameters.grab==0):
+            self.grab = parameters.grab
+        if(parameters.grab_time or parameters.grab_time==0):
+            self.grab_time = parameters.grab_time
+
+    def make_longer(self):
+        if(self.length == paddle_short_length):
+            self.length = paddle_length
+            self.powerup_time = 0
+        else:
+            self.length = paddle_long_length
+            self.powerup_time = powerup_time
+            if(self.y+ self.length -1 >= max_y):
+                self.y = max_y - self.length
+    
+    def make_shorter(self):
+        if(self.length == paddle_long_length):
+            self.length = paddle_length
+            self.powerup_time = 0
+        else:
+            self.length = paddle_short_length
+            self.powerup_time = powerup_time
+
+    def start_grab(self):
+        self.grab = 1
+        self.grab_time = powerup_time
