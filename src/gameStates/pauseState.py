@@ -16,6 +16,7 @@ class pauseState(BaseState):
         self.bricks = []
         self.powerups = []
         self.score = 0
+        self.time_played = 0
 
     def render(self,display):
         lives_string = "lives : " + str(self.lives)
@@ -24,7 +25,9 @@ class pauseState(BaseState):
         score_string = " score:" + str(self.score)
         for i,val in enumerate(score_string):
             display[1][i] = val
-
+        lives_string = "time_played : " + str(self.time_played) 
+        for i,val in enumerate(lives_string):
+            display[2][i] = val
         for ball in self.balls[:]:
             ball.render(display)
 
@@ -43,7 +46,7 @@ class pauseState(BaseState):
             self.paddle.update(input)
             self.balls[0].y = self.paddle.y
         if(input == 'p'):
-            return ["playState", {"balls" : self.balls , "paddle" : self.paddle, "lives" : self.lives , "bricks" : self.bricks , "powerups" : self.powerups, "score":self.score} ]
+            return ["playState", {"balls" : self.balls , "paddle" : self.paddle, "lives" : self.lives , "bricks" : self.bricks , "powerups" : self.powerups, "score":self.score , "time_played" : self.time_played} ]
 
     def enter(self,parameters):
         if("balls" in parameters):
@@ -60,5 +63,7 @@ class pauseState(BaseState):
             self.powerups = parameters['powerups']
         if('score' in parameters):
             self.score = parameters['score']
+        if('time_played' in parameters):
+            self.time_played = parameters['time_played']
         if len(self.bricks)==0:
             self.bricks = make_level()

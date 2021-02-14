@@ -13,6 +13,7 @@ class playState(BaseState):
         self.score = 0
         self.bricks = []
         self.powerups = []
+        self.time_played = 0
 
     def render(self,display):
         lives_string = "lives : " + str(self.lives) 
@@ -21,7 +22,9 @@ class playState(BaseState):
         score_string = " score:" + str(self.score)
         for i,val in enumerate(score_string):
             display[1][i] = val
-
+        lives_string = "time_played : " + str(self.time_played) 
+        for i,val in enumerate(lives_string):
+            display[2][i] = val
         for ball in self.balls[:]:
             ball.render(display)
         display = self.paddle.render(display)
@@ -34,6 +37,7 @@ class playState(BaseState):
         return display
 
     def update(self,input):
+        self.time_played+=1
         for ball in self.balls[:]:
             ball.update(input)
         self.paddle.update(input)
@@ -44,7 +48,7 @@ class playState(BaseState):
         for index, powerup in enumerate(self.powerups):
             powerup.update(self.powerups, index)
         if(input=='p'):
-            return ["pauseState", {"balls" : self.balls , "paddle" : self.paddle , "gameover" : 0 , "lives" : self.lives, "bricks":self.bricks , "powerups" : self.powerups, 'score':self.score} ]
+            return ["pauseState", {"balls" : self.balls , "paddle" : self.paddle , "gameover" : 0 , "lives" : self.lives, "bricks":self.bricks , "powerups" : self.powerups, 'score':self.score , "time_played" : self.time_played} ]
         #================================ this handles ball + paddle ================================================================================
         for ball in self.balls[:]:
         # check if it can hit  the paddle
@@ -55,10 +59,12 @@ class playState(BaseState):
                         ball.stuck=1
                     ball.dx = -1 * ball.dx
                     # now we change the dy according to where on the paddle it hit
-                    if(ball.y< int(self.paddle.y + self.paddle.length/2) and input=='a'):
-                        ball.dy = -1 + -1*(int(self.paddle.y + self.paddle.length/2) - ball.y)
+                    if(ball.y< int(self.paddle.y + self.paddle.length/2)):
+                        ball.time_y = int(top_paddle_hit/(int(self.paddle.y + self.paddle.length/2) - ball.y))
                     elif(ball.y>int(self.paddle.y + self.paddle.length/2) and input=='d'):
-                        ball.dy = 1 + -1*(int(self.paddle.y + self.paddle.length/2) - ball.y)
+                        ball.time_y = int(top_paddle_hit/(-1*(int(self.paddle.y + self.paddle.length/2) - ball.y)))
+                    if(ball.time_y<=0):
+                        ball.time_y = 1
         #================================ finish bal + paddle ================================================================================
 
 
@@ -117,7 +123,7 @@ class playState(BaseState):
             if(self.lives ==1):
                 return ["gameoverState" , {"score" : self.score}]
             else:
-                return ["pauseState", {  "gameover" : 1 , "lives" : self.lives -1, 'score':self.score , "bricks":self.bricks } ]
+                return ["pauseState", {  "gameover" : 1 , "lives" : self.lives -1, 'score':self.score , "bricks":self.bricks, "time_played" : self.time_played } ]
 
         return []
     def enter(self,parameters):
@@ -133,5 +139,7 @@ class playState(BaseState):
             self.bricks = parameters['bricks']
         if('powerups' in parameters):
             self.powerups = parameters['powerups']
+        if('time_played' in parameters):
+            self.time_played = parameters['time_played']
         if(len(self.bricks)==0):
             self.bricks = make_level()

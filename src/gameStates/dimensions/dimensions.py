@@ -35,3 +35,9 @@ game_over_string = ["\t\t\t _______  _______  __   __  _______    _______  __   
               "\t\t\t|_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|"]
 
 game_over_newlines = 7
+
+
+# time for ball
+ball_standard_time = 2
+# this has to be greater than the maximum distance possible between the ball.y and the paddle center during a collision between them both
+top_paddle_hit = 5

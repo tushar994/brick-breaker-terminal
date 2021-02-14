@@ -52,9 +52,9 @@ class StateMachine:
             for valu in val:
                 if(valu=="x"):
                     print(f"{Fore.RED}#{Style.RESET_ALL}",end = "")
-                elif(valu=="y"):
+                elif(valu=="k"):
                     print(f"{Fore.YELLOW}#{Style.RESET_ALL}",end = "")
-                elif(valu=="m"):
+                elif(valu=="q"):
                     print(f"{Fore.MAGENTA}#{Style.RESET_ALL}",end = "")
                 elif(valu=="b"):
                     print(f"{Fore.BLUE}#{Style.RESET_ALL}",end = "")

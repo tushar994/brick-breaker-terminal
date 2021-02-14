@@ -10,10 +10,10 @@ from .powerup import *
 brick_colours = [
     "x",
     "b",
-    "m",
+    "q",
     "z",
     "#",
-    "y",
+    "k",
 ]
 
 
@@ -47,7 +47,7 @@ class Brick:
 
         text = ""
         if(self.explode):
-            text = "y"
+            text = brick_colours[5]
         else:
             text = brick_colours[self.level - 1]
         for i in range(0,brick_width):

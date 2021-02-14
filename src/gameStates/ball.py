@@ -6,8 +6,8 @@ class Ball:
         self.y = 0
         self.dx = -1
         self.dy = 1
-        self.time_y = 2
-        self.time_x = 2
+        self.time_y = ball_standard_time
+        self.time_x = ball_standard_time
         # these two map the time before the next move
         self.current_x = 0
         self.current_y = 0
