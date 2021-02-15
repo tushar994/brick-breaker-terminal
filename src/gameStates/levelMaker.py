@@ -33,12 +33,11 @@ def make_level():
     bricks = np.full((brick_x,brick_y), None)
     left_brick_x = (max_x - brick_x*brick_width)/2
     left_brick_y = (max_y - brick_y*brick_width)/3
-    is_explode = random.randint(0,5)
-    # if(is_explode==5):
-    #     is_explode = 1
-    # else:
-    #     is_explode = 0
-    is_explode = 1
+    is_explode = random.randint(0,prob_explode_brick)
+    if(is_explode==prob_explode_brick):
+        is_explode = 1
+    else:
+        is_explode = 0
     # this sectin adds exploding bricks to the mix (ggggg)
     if is_explode:
         # find which brick is the first  exploding brick
@@ -80,4 +79,5 @@ def make_level():
                 yes = random.randint(0,4)
                 if(yes==4):
                     bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0})
+    
     return bricks

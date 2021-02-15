@@ -41,3 +41,7 @@ game_over_newlines = 7
 ball_standard_time = 2
 # this has to be greater than the maximum distance possible between the ball.y and the paddle center during a collision between them both
 top_paddle_hit = 5
+
+
+# proboability of exploding bricks appearing
+prob_explode_brick = 4

@@ -115,16 +115,21 @@ class playState(BaseState):
         # actually remove the powerups
         self.powerups = [powerup for powerup in self.powerups if powerup.exist != 0]
         #================================ finish powerup + paddle ================================================================================
+        # remove balls from ball array that are None after making balls that dead None
         for index,ball in enumerate(self.balls):
             if(ball.x > max_x-2):
                 self.balls[index] = None
         self.balls = [ball for ball in self.balls if ball]
+        # check if any bballs and end game if none
         if len(self.balls)==0:
             if(self.lives ==1):
                 return ["gameoverState" , {"score" : self.score}]
             else:
                 return ["pauseState", {  "gameover" : 1 , "lives" : self.lives -1, 'score':self.score , "bricks":self.bricks, "time_played" : self.time_played } ]
 
+        # check bricks and send to next level if all done
+        if( len([brick for brick_arr in self.bricks for brick in  brick_arr  if brick and brick.level<5] ) ==0):
+            return ["pauseState" , {"score" : self.score, "time_played" : self.time_played , "lives" : self.lives , "gameover" : 1}]
         return []
     def enter(self,parameters):
         if('balls' in parameters):
