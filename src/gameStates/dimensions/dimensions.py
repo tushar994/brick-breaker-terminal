@@ -2,7 +2,7 @@ max_x = 40
 max_y = 160
 
 # indicates number of bricks
-brick_x = 6
+brick_x = 1
 brick_y = 30
 brick_width = 4
 
@@ -14,9 +14,9 @@ power_speed = 2
 powerup_time = 100
 
 # for paddle
-paddle_length  = 5
-paddle_long_length = 7
-paddle_short_length= 3
+paddle_length  = 10
+paddle_long_length = 14
+paddle_short_length= 5
 paddle_speed = 2
 
 # score added perbrick

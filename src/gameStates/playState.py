@@ -59,10 +59,12 @@ class playState(BaseState):
                         ball.stuck=1
                     ball.dx = -1 * ball.dx
                     # now we change the dy according to where on the paddle it hit
-                    if(ball.y< int(self.paddle.y + self.paddle.length/2)):
+                    if(ball.y< int(self.paddle.y + self.paddle.length/2) and input=='a'):
                         ball.time_y = int(top_paddle_hit/(int(self.paddle.y + self.paddle.length/2) - ball.y))
+                        ball.dy = -1* abs(ball.dy)
                     elif(ball.y>int(self.paddle.y + self.paddle.length/2) and input=='d'):
                         ball.time_y = int(top_paddle_hit/(-1*(int(self.paddle.y + self.paddle.length/2) - ball.y)))
+                        ball.dy = abs(ball.dy)
                     if(ball.time_y<=0):
                         ball.time_y = 1
         #================================ finish bal + paddle ================================================================================
@@ -129,7 +131,7 @@ class playState(BaseState):
 
         # check bricks and send to next level if all done
         if( len([brick for brick_arr in self.bricks for brick in  brick_arr  if brick and brick.level<5] ) ==0):
-            return ["pauseState" , {"score" : self.score, "time_played" : self.time_played , "lives" : self.lives , "gameover" : 1}]
+            return ["pauseState" , {"score" : self.score + 500, "time_played" : self.time_played , "lives" : self.lives , "gameover" : 1}]
         return []
     def enter(self,parameters):
         if('balls' in parameters):

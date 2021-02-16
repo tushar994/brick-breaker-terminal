@@ -54,7 +54,7 @@ class pauseState(BaseState):
         if('paddle' in parameters):
             self.paddle.enter(parameters['paddle'])
         if('gameover' in parameters):
-            self.gameover =  1
+            self.gameover =  parameters['gameover']
         if('lives' in parameters):
             self.lives = parameters['lives']
         if('bricks' in parameters):
