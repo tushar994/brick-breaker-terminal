@@ -1,3 +1,4 @@
+# the dimensions of screen
 max_x = 40
 max_y = 160
 
@@ -45,3 +46,21 @@ top_paddle_hit = 5
 
 # proboability of exploding bricks appearing
 prob_explode_brick = 4
+
+# time before bricks start falling
+brick_fall_time = 100
+
+# for gravity effect
+acceleration_gravity = 1
+
+# bullet speed should be negetive
+bullet_speed = -1
+
+# bullet delay between shots
+bullet_delay = 5
+
+# shooting time period
+shooting_time_period = 20
+
+# fireball time
+fireball_powerup_time = 30

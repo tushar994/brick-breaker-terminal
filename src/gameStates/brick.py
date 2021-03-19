@@ -2,7 +2,6 @@ from .dimensions.dimensions import *
 import numpy as np
 import colorama
 from .powerup import *
-
 # color for different levels of bricks
 # 0-3 is for levels 1-4
 # 4 is for indestructible
@@ -24,6 +23,7 @@ class Brick:
         self.level = 5
         self.explode = 0
         self.done = 0
+        self.change = 0
         if ("x" in config):
             self.x = config['x']
         if( "y" in config):
@@ -32,16 +32,9 @@ class Brick:
             self.level = config['level']
         if("explode" in config):
             self.explode = config['explode']
-    
-    def update(self, input):
-        if input=='a':
-            self.y-=1
-        if input=='d':
-            self.y+=1
-        if self.y < 0:
-            self.y = 0
-        if self.y+self.length -1 >=max_y:
-            self.y = max_y - self.length
+        if("change" in config):
+            self.change = config['change']
+        
 
     def render(self, display):
 
@@ -63,17 +56,22 @@ class Brick:
         if(parameters.length):
             self.length = parameters.length
     
-    def update(self,bricks, index1,index2 , powerups ,playstate):
+    def update(self,bricks, index1,index2 , powerups ,playstate, ball):
         if(self.done):
             playstate.score += brick_score_add
             bricks[index1][index2] = None
-            powerups.append(Powerup(self.x,self.y))
+            if ball:
+                powerups.append(Powerup(self.x,self.y,ball[0],ball[1],ball[2],ball[3],ball[4],ball[5]))
+            else:
+                powerups.append(Powerup(self.x,self.y,0,0,1,1,0,0))
             if(self.explode):
                 for i in range(-1,2):
                     for j in range(-1,2):
                         if((index1 + i) < brick_x and (index1 + i) >= 0 and (index2+j)>= 0 and (index2+j)< brick_y):
                             if(bricks[index1 + i][index2 + j]):
                                 bricks[index1 + i][index2+j].done = 1
+        if(self.change):
+            self.level = self.level%5 + 1
             # print("brick array is ", end="")
             # print(bricks[index1])
             # bricks[index1] = np.delete(bricks[index1],[index2])
@@ -84,10 +82,12 @@ class Brick:
             shift_x = 0
             shift_y = 0
             actually = 0
+            self.change = 0
+            ball_copy =  [ball.dx,ball.dy,ball.time_x,ball.time_y,ball.current_x,ball.current_y]
             if(ball.through):
                 self.level = 0
                 self.done = 1
-                self.update(bricks,index1,index2, powerups, playstate)
+                self.update(bricks,index1,index2, powerups, playstate, None)
             else:
                 # check if it hit in y direction
                 if((ball.y <= self.y -1 or ball.y >=self.y +brick_width) and (ball.x >= self.x and ball.x <= self.x + brick_width -1)):
@@ -123,8 +123,12 @@ class Brick:
                         ball.dx *=-1
                         ball.dy *=-1
                         actually =1
+                # make brick explode if ball is fireball
+                if(ball.fireball and actually):
+                    self.done = 1
+                    self.explode = 1
                 if(self.level < 5 and actually):
                     self.level -=1
                 if (self.level ==0 and actually):
                     self.done = 1
-                    self.update(bricks,index1,index2, powerups, playstate)
+                    self.update(bricks,index1,index2, powerups, playstate, ball_copy)

@@ -16,24 +16,52 @@ power_colours = [
     "C",
     "@",
     "Y",
+    "S",
+    "F",
 ]
 
 class Powerup:
-    def __init__(self , x, y):
+    def __init__(self , x, y, dx, dy, time_x,time_y,current_x,current_y):
         self.x = x
-        self.type = random.randint(0,5)
-        # self.type = 5
+        # self.type = random.randint(0,7)
+        self.type = 7
         self.y = y
         self.speed = power_speed
+        self.dx = dx
+        self.dy = dy
+        self.time_y = time_y
+        self.time_x = time_x
+        # these two map the time before the next move
+        self.current_x = current_x
+        self.current_y = current_y
         self.time = time_power
         self.text = power_colours[self.type]
         self.exist = 1
     
     def update(self, powerups, index):
-        self.x += self.speed
+        self.current_x += 1
+        self.current_y += 1
+        if(self.current_x>= self.time_x):
+            self.x += self.dx
+            self.dx += acceleration_gravity
+            self.current_x = 0
+        if(self.current_y>= self.time_y):
+            self.y += self.dy
+            self.current_y = 0
+
         if(self.x >= max_x-1):
             self.time -=1
             self.x = max_x-1
+            self.dy = 0
+            self.dx = 0
+        if(self.x <= 0):
+            self.x = 0
+            self.dx = -1*self.dx
+        if(self.y <= 0):
+            self.y = 0
+        if(self.y >= max_y -1):
+            self.y = max_y -1
+            self.dy = -1*self.dy
         if(self.time==0):
             self.exist = 0
             # destroy this powerup

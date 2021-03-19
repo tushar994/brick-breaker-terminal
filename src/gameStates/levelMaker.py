@@ -78,6 +78,10 @@ def make_level():
             if(not( bricks[i][j])):
                 yes = random.randint(0,4)
                 if(yes==4):
-                    bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0})
+                    choose_change = random.randint(0,4)
+                    if(choose_change==10):
+                        bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0, 'change' : 1})
+                    else:
+                        bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : 1, 'explode' : 0, 'change' : 0})
     
     return bricks

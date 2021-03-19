@@ -70,6 +70,10 @@ class StateMachine:
                     print(f"{Fore.BLUE}@{Style.RESET_ALL}",end = "")
                 elif(valu=="C"):
                     print(f"{Fore.CYAN}@{Style.RESET_ALL}",end = "")
+                elif(valu=="S"):
+                    print(f"{Fore.YELLOW}S{Style.RESET_ALL}",end = "")
+                elif(valu=="F"):
+                    print(f"{Fore.RED}F{Style.RESET_ALL}",end = "")
                 else:
                     print(valu,end = "")
                     

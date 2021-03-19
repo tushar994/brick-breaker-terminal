@@ -16,6 +16,8 @@ class Ball:
         self.through_left = 0
         # to see if it is stuck to paddle
         self.stuck = 0
+        self.fireball = 0
+        self.fireball_left = 0
     
     def enter(self, parameters):
         if('x' in parameters):
@@ -42,6 +44,10 @@ class Ball:
             self.speed_left = parameters['speed_left']
         if('stuck' in parameters):
             self.stuck = parameters['stuck']
+        if('fireball' in parameters):
+            self.fireball = parameters['fireball']
+        if('fireball_left' in parameters):
+            self.fireball_left = parameters['fireball_left']
 
 
 
@@ -89,6 +95,10 @@ class Ball:
             self.through = 0
             self.through_left=0
         # self.x>=max_x-1 or
+        self.fireball_left-=1
+        if(self.fireball_left<=0):
+            self.fireball = 0
+            self.fireball_left = 0
 
     def render(self, display):
         display[self.x][self.y] = "0"
@@ -103,3 +113,7 @@ class Ball:
     def through_power(self):
         self.through = 1
         self.through_left = powerup_time
+    
+    def fireball_power(self):
+        self.fireball = 1
+        self.fireball_left = fireball_powerup_time

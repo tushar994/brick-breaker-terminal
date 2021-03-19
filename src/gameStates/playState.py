@@ -4,6 +4,7 @@ from .ball import *
 from .paddle import *
 from .levelMaker import *
 from .powerup import *
+from .bullet import Bullet
 
 class playState(BaseState):
     def __init__(self):
@@ -14,6 +15,10 @@ class playState(BaseState):
         self.bricks = []
         self.powerups = []
         self.time_played = 0
+        self.drop_bricks_time = brick_fall_time
+        self.level = 1
+        self.bullets = []
+        self.bullet_shoot_time = 0
 
     def render(self,display):
         lives_string = "lives : " + str(self.lives) 
@@ -25,6 +30,12 @@ class playState(BaseState):
         lives_string = "time_played : " + str(self.time_played) 
         for i,val in enumerate(lives_string):
             display[2][i] = val
+        lives_string = "level : " + str(self.level)
+        for i,val in enumerate(lives_string):
+            display[3][i] = val
+        lives_string = "shooting time : " + str(self.paddle.shooting_time)
+        for i,val in enumerate(lives_string):
+            display[4][i] = val
         for ball in self.balls[:]:
             ball.render(display)
         display = self.paddle.render(display)
@@ -34,9 +45,13 @@ class playState(BaseState):
                     display = brick.render(display)
         for powerup in self.powerups:
             powerup.render(display)
+        for bullet in self.bullets:
+            bullet.render(display)
         return display
 
     def update(self,input):
+        if (input=='l'):
+            return self.change_level()
         self.time_played+=1
         for ball in self.balls[:]:
             ball.update(input)
@@ -44,17 +59,39 @@ class playState(BaseState):
         for index1, brick_array in enumerate(self.bricks):
             for index2,brick in enumerate(brick_array):
                 if brick:
-                    brick.update(self.bricks,index1, index2,self.powerups , self)
+                    brick.update(self.bricks,index1, index2,self.powerups , self, None)
         for index, powerup in enumerate(self.powerups):
             powerup.update(self.powerups, index)
         if(input=='p'):
-            return ["pauseState", {"balls" : self.balls , "paddle" : self.paddle , "gameover" : 0 , "lives" : self.lives, "bricks":self.bricks , "powerups" : self.powerups, 'score':self.score , "time_played" : self.time_played} ]
+            return ["pauseState", {"balls" : self.balls , "paddle" : self.paddle , "gameover" : 0 , "lives" : self.lives, "bricks":self.bricks , "powerups" : self.powerups, 'score':self.score , "time_played" : self.time_played, "level" : self.level, "bullets":self.bullets, "bullet_shoot_time":self.bullet_shoot_time} ]
+        # =============================== This handles bullets ==============================================
+        # add bullets if relevant
+        self.bullet_shoot_time+=1
+        
+        if(self.paddle.shooting==1 and self.bullet_shoot_time>=bullet_delay):
+            self.bullets.append(Bullet(max_x-2,int(self.paddle.y+self.paddle.length/2)))
+            self.bullet_shoot_time = 0
+        for index,bullet in enumerate(self.bullets[:]):
+            bullet.update(input)
+            if(bullet.done):
+                self.bullets.pop(index)
+        
+        # collision between bullets and bricks
+        for index1, brick_array in enumerate(self.bricks):
+            for index2,brick in enumerate(brick_array):
+                if brick:
+                    for bullet in self.bullets:
+                        if(bullet.x >= brick.x and bullet.x <= brick.x + brick_width and bullet.y>=brick.y and bullet.y<=brick.y+brick_width):
+                            bullet.done = 1
+                            brick.done = 1
         #================================ this handles ball + paddle ================================================================================
         for ball in self.balls[:]:
         # check if it can hit  the paddle
             if(ball.x == max_x-2 and ball.dx >= 0):
                 # check if contact with paddle has been madde
                 if(ball.y >= self.paddle.y -1 and ball.y <= self.paddle.y + self.paddle.length ):
+                    if(self.time_played >= self.drop_bricks_time):
+                        is_game_over = self.drop_bricks()
                     if(self.paddle.grab):
                         ball.stuck=1
                     ball.dx = -1 * ball.dx
@@ -71,8 +108,8 @@ class playState(BaseState):
 
 
         #================================ this handles bal + brick ================================================================================
-        for index1, brick_array in enumerate(self.bricks):
-            for index2,brick in enumerate(brick_array):
+        for index1, brick_array in enumerate(self.bricks[:]):
+            for index2,brick in enumerate(brick_array[:]):
                 if brick:
                     for ball in self.balls:
                         brick.ball_collide(ball, self.bricks,index1, index2, self.powerups, self)
@@ -112,6 +149,12 @@ class playState(BaseState):
                         ball.through_power()
                 elif(powerup.type==5):
                     self.paddle.start_grab()
+                elif(powerup.type==6):
+                    self.paddle.start_shooting()
+                # fireball
+                elif(powerup.type==7):
+                    for ball in self.balls:
+                        ball.fireball_power()
                 # remove powerup
                 self.powerups[index].exist = 0
         # actually remove the powerups
@@ -123,15 +166,15 @@ class playState(BaseState):
                 self.balls[index] = None
         self.balls = [ball for ball in self.balls if ball]
         # check if any bballs and end game if none
-        if len(self.balls)==0:
-            if(self.lives ==1):
+        if len(self.balls)==0 or self.lives == 0:
+            if(self.lives ==1 or self.lives ==0 ):
                 return ["gameoverState" , {"score" : self.score}]
             else:
-                return ["pauseState", {  "gameover" : 1 , "lives" : self.lives -1, 'score':self.score , "bricks":self.bricks, "time_played" : self.time_played } ]
+                return ["pauseState", {  "gameover" : 1 , "lives" : self.lives -1, 'score':self.score , "bricks":self.bricks, "time_played" : self.time_played , "level" : self.level} ]
 
         # check bricks and send to next level if all done
         if( len([brick for brick_arr in self.bricks for brick in  brick_arr  if brick and brick.level<5] ) ==0):
-            return ["pauseState" , {"score" : self.score + 500, "time_played" : self.time_played , "lives" : self.lives , "gameover" : 1}]
+            return this.change_level()
         return []
     def enter(self,parameters):
         if('balls' in parameters):
@@ -148,5 +191,26 @@ class playState(BaseState):
             self.powerups = parameters['powerups']
         if('time_played' in parameters):
             self.time_played = parameters['time_played']
+        if('level' in parameters):
+            self.level = parameters['level']
+        if('bullets' in parameters):
+            self.bullets = parameters['bullets']
+        if('bullet_shoot_time' in parameters):
+            self.bullet_shoot_time = parameters['bullet_shoot_time']
         if(len(self.bricks)==0):
             self.bricks = make_level()
+
+    def drop_bricks(self):
+        if(self.time_played >= self.drop_bricks_time):
+            for index1, brick_array in enumerate(self.bricks):
+                for index2,brick in enumerate(brick_array):
+                    if brick:
+                        brick.x += 1
+                        if(brick.x + brick_width >= max_x):
+                            self.lives = 0
+    def change_level(self):
+        self.level +=1
+        if(self.level <=3):
+            return ["pauseState", {  "gameover" : 1 , "lives" : self.lives, 'score':self.score +500, "time_played" : self.time_played , "level" : self.level} ]
+        else:
+            return ["gameoverState" , {"score" : self.score}]

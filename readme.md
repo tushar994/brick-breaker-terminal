@@ -28,6 +28,8 @@ This is a terminal version of the game breakout, made in python.
 
 `s` - restart game after gameover
 
+`l` - go to next level
+
 ## Features
 
 ### Inheritance

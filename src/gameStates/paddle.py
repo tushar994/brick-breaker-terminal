@@ -9,6 +9,8 @@ class Paddle:
         self.powerup_time = 0
         self.grab = 0
         self.grab_time = 0
+        self.shooting = 0
+        self.shooting_time = 0
     
     def update(self, input):
         # worrying about powerups
@@ -22,6 +24,10 @@ class Paddle:
         if self.powerup_time<=0:
             self.length = paddle_length
             self.powerup_time = 0
+        self.shooting_time -=1
+        if(self.shooting_time<=0):
+            self.shooting = 0
+            self.shooting_time =0
         # movement
         if input=='a':
             self.y-=self.speed
@@ -35,6 +41,8 @@ class Paddle:
     def render(self, display):
         for i in range(0,self.length):
             display[max_x-1][self.y + i] = "="
+        if(self.shooting):
+            display[max_x-2][self.y + int(self.length/2)] = "!"
         return display
     def enter(self,parameters):
         if(parameters.x  or parameters.x ==0):
@@ -51,6 +59,10 @@ class Paddle:
             self.grab = parameters.grab
         if(parameters.grab_time or parameters.grab_time==0):
             self.grab_time = parameters.grab_time
+        if(parameters.shooting or parameters.shooting==0):
+            self.shooting = parameters.shooting
+        if(parameters.shooting_time or parameters.shooting_time==0):
+            self.shooting_time = parameters.shooting_time
 
     def make_longer(self):
         if(self.length == paddle_short_length):
@@ -73,3 +85,7 @@ class Paddle:
     def start_grab(self):
         self.grab = 1
         self.grab_time = powerup_time
+    
+    def start_shooting(self):
+        self.shooting = 1
+        self.shooting_time = shooting_time_period
