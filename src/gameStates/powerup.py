@@ -23,8 +23,8 @@ power_colours = [
 class Powerup:
     def __init__(self , x, y, dx, dy, time_x,time_y,current_x,current_y):
         self.x = x
-        # self.type = random.randint(0,7)
-        self.type = 7
+        self.type = random.randint(0,7)
+        # self.type = 7
         self.y = y
         self.speed = power_speed
         self.dx = dx

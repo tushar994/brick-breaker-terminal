@@ -2,6 +2,7 @@ from .dimensions.dimensions import *
 import numpy as np
 import colorama
 from .powerup import *
+import random
 # color for different levels of bricks
 # 0-3 is for levels 1-4
 # 4 is for indestructible
@@ -24,6 +25,7 @@ class Brick:
         self.explode = 0
         self.done = 0
         self.change = 0
+        self.no_power = 0
         if ("x" in config):
             self.x = config['x']
         if( "y" in config):
@@ -34,6 +36,8 @@ class Brick:
             self.explode = config['explode']
         if("change" in config):
             self.change = config['change']
+        if("no_power" in config):
+            self.no_power = config['no_power']
         
 
     def render(self, display):
@@ -60,10 +64,11 @@ class Brick:
         if(self.done):
             playstate.score += brick_score_add
             bricks[index1][index2] = None
-            if ball:
-                powerups.append(Powerup(self.x,self.y,ball[0],ball[1],ball[2],ball[3],ball[4],ball[5]))
-            else:
-                powerups.append(Powerup(self.x,self.y,0,0,1,1,0,0))
+            if (random.randint(0,3)==3 and self.no_power==0):
+                if ball:
+                    powerups.append(Powerup(self.x,self.y,ball[0],ball[1],ball[2],ball[3],ball[4],ball[5]))
+                else:
+                    powerups.append(Powerup(self.x,self.y,0,0,1,1,0,0))
             if(self.explode):
                 for i in range(-1,2):
                     for j in range(-1,2):
@@ -124,6 +129,8 @@ class Brick:
                         ball.dy *=-1
                         actually =1
                 # make brick explode if ball is fireball
+                if(actually):
+                    print("\a",end = "")
                 if(ball.fireball and actually):
                     self.done = 1
                     self.explode = 1

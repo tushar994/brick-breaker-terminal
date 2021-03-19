@@ -29,7 +29,16 @@ def iterate(bricks, starting_x, starting_y, changes, first, one,left_brick_x,lef
     return [bricks,total]
 
 
-def make_level():
+def make_level(level):
+    if(level==3):
+        bricks = np.full((4,int(max_y/brick_width)), None)
+        left_brick_x = (max_x - 3*brick_width)/2
+        left_brick_y = (max_y - brick_y*brick_width)/3
+        for i in range(1,4):
+            for j in range(0,brick_y):
+                if(random.randint(1,10)==10):
+                    bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : 5, 'explode' : 0, 'change' : 0})
+        return bricks
     bricks = np.full((brick_x,brick_y), None)
     left_brick_x = (max_x - brick_x*brick_width)/2
     left_brick_y = (max_y - brick_y*brick_width)/3
@@ -78,10 +87,10 @@ def make_level():
             if(not( bricks[i][j])):
                 yes = random.randint(0,4)
                 if(yes==4):
-                    choose_change = random.randint(0,4)
+                    choose_change = random.randint(0,10)
                     if(choose_change==10):
                         bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0, 'change' : 1})
                     else:
-                        bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : 1, 'explode' : 0, 'change' : 0})
+                        bricks[i][j] = Brick({'x': int(i*brick_width + left_brick_x) , 'y':int(j*brick_width + left_brick_y) , 'level' : random.randint(1,5), 'explode' : 0, 'change' : 0})
     
     return bricks

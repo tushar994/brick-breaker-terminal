@@ -45,7 +45,7 @@ top_paddle_hit = 5
 
 
 # proboability of exploding bricks appearing
-prob_explode_brick = 4
+prob_explode_brick = 2
 
 # time before bricks start falling
 brick_fall_time = 100
@@ -64,3 +64,16 @@ shooting_time_period = 20
 
 # fireball time
 fireball_powerup_time = 30
+
+# boss length
+boss_length = 15
+boss_health = 10
+boss_drop_bomb_time = 20
+
+bomb_speed = 1
+
+# number of lines used to print
+number_print_lines = 8
+
+# time after losing health where boss dofends himself
+brick_activate_time = 50

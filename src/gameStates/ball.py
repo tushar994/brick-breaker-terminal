@@ -65,10 +65,10 @@ class Ball:
             if(self.current_x>= self.time_x):
                 self.x += self.dx
                 self.current_x = 0
-                if( self.x<=0):
+                if( self.x<=number_print_lines):
                     self.dx = -1*self.dx
-                    if(self.x<=0):
-                        self.x = 0
+                    if(self.x<=number_print_lines):
+                        self.x = number_print_lines
                     # if(self.x>=max_x-1):
                     #     self.x = max_x-2
             self.current_y+=1
