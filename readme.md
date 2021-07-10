@@ -13,6 +13,8 @@ This is a terminal version of the game breakout, made in python.
     ```terminal
     python main.py
     ```
+    
+- If it does not seem to render properly,make your terminal window size bigger, so that the whole game screen can render on it at once
 
 ## Controls
 
